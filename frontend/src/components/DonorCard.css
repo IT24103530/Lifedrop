@@ -1,0 +1,91 @@
+.donor-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-normal);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.donor-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+  border-color: var(--primary-light);
+}
+
+.donor-card-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.blood-badge {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #D62828, #800020);
+  color: #FFFFFF;
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(214, 40, 40, 0.25);
+  flex-shrink: 0;
+}
+
+.donor-info {
+  flex-grow: 1;
+}
+
+.donor-name {
+  font-size: 1.1rem;
+  margin-bottom: 0.15rem;
+}
+
+.donor-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.donor-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  border-top: 1px dashed var(--border-color);
+  padding-top: 0.85rem;
+}
+
+.donor-detail {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--text-main);
+}
+
+.detail-icon {
+  color: var(--text-muted);
+}
+
+.phone-link {
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.card-eligibility-section {
+  margin-top: 0.35rem;
+}
