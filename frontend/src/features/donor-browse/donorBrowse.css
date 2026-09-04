@@ -1,0 +1,70 @@
+.header-title-box {
+  max-width: 680px;
+  margin: 0 auto 2.5rem;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 1rem;
+  margin-top: 0.5rem;
+}
+
+.filter-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  padding: 1.75rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.filter-title {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text-heading);
+}
+
+.filter-icon {
+  color: var(--color-primary);
+}
+
+.filter-grid {
+  margin-top: 1rem;
+}
+
+.reset-btn {
+  color: var(--color-primary);
+}
+
+.results-count-bar {
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.results-count-text {
+  font-size: 0.9375rem;
+  color: var(--text-muted);
+}
+
+.donors-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+@media (max-width: 1024px) {
+  .donors-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .filter-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .donors-grid {
+    grid-template-columns: 1fr;
+  }
+}
