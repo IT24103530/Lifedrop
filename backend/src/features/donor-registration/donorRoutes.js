@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Donor = require('../../models/Donor');
+const inMemoryStore = require('../../config/inMemoryStore');
 
 // Sri Lankan phone validation helper
 const isValidSLPhone = (phone) => {
@@ -56,13 +57,24 @@ router.post('/', async (req, res) => {
       });
     }
 
-    const donor = await Donor.create({
-      name,
-      bloodType,
-      district,
-      phone,
-      lastDonationDate: donationDate
-    });
+    let donor;
+    if (global.isMongoConnected) {
+      donor = await Donor.create({
+        name,
+        bloodType,
+        district,
+        phone,
+        lastDonationDate: donationDate
+      });
+    } else {
+      donor = inMemoryStore.addDonor({
+        name,
+        bloodType,
+        district,
+        phone,
+        lastDonationDate: donationDate.toISOString()
+      });
+    }
 
     res.status(201).json({
       success: true,
@@ -80,3 +92,4 @@ router.post('/', async (req, res) => {
 });
 
 module.exports = router;
+

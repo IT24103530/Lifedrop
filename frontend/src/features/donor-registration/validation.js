@@ -47,6 +47,23 @@ export function validateDonorForm(formData) {
     }
   }
 
+  // Password validation (if provided)
+  if (formData.password !== undefined) {
+    if (!formData.password) {
+      errors.password = 'Password is required.';
+    } else if (formData.password.length < 6) {
+      errors.password = 'Password must be at least 6 characters long.';
+    }
+  }
+
+  if (formData.confirmPassword !== undefined && formData.password) {
+    if (!formData.confirmPassword) {
+      errors.confirmPassword = 'Please confirm your password.';
+    } else if (formData.confirmPassword !== formData.password) {
+      errors.confirmPassword = 'Passwords do not match.';
+    }
+  }
+
   return {
     errors,
     isValid: Object.keys(errors).length === 0
