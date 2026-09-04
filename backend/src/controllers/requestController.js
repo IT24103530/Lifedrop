@@ -129,6 +129,47 @@ const getRequests = async (req, res) => {
   }
 };
 
+// @desc    Update request status (fulfilled/expired/open)
+// @route   PATCH /api/requests/:id
+// @access  Public / Protected
+const updateRequestStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    if (!['open', 'fulfilled', 'expired', 'cancelled'].includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid status value. Must be open, fulfilled, expired, or cancelled.'
+      });
+    }
+
+    const request = await Request.findById(id);
+    if (!request) {
+      return res.status(404).json({
+        success: false,
+        message: 'Request not found'
+      });
+    }
+
+    request.status = status;
+    await request.save();
+
+    res.status(200).json({
+      success: true,
+      message: `Request status updated to ${status}`,
+      data: request
+    });
+  } catch (error) {
+    console.error('Update Request Status Error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error updating request status',
+      error: error.message
+    });
+  }
+};
+
 // @desc    Full update of a blood request (Edit fields)
 // @route   PUT /api/requests/:id
 // @access  Public / Protected
