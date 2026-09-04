@@ -67,6 +67,10 @@ const donorRoutes = require('./features/donor-registration/donorRoutes');
 const donorBrowseRoutes = require('./features/donor-browse/donorBrowseRoutes');
 
 // API Endpoints Mapping
+app.get('/', (req, res) => {
+  res.status(200).json({ status: 'UP', message: 'LifeDrop Server is Live' });
+});
+
 app.get('/api/health', (req, res) => {
   res.status(200).json({
     status: 'UP',
