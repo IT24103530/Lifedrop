@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Bell, Check, AlertCircle, Clock } from 'lucide-react';
+import { Bell, Check, AlertCircle, Clock, Trash2, X } from 'lucide-react';
 import { useNotifications } from '../context/NotificationContext';
 import './NotificationBell.css';
 
 export default function NotificationBell() {
-  const { notifications, unreadCount, markAsRead, markAllAsRead } = useNotifications();
+  const { notifications, unreadCount, markAsRead, markAllAsRead, deleteNotification, clearNotifications } = useNotifications();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -39,11 +39,23 @@ export default function NotificationBell() {
               <AlertCircle size={18} className="text-danger" />
               <span>Urgent Alerts ({notifications.length})</span>
             </div>
-            {unreadCount > 0 && (
-              <button className="mark-all-btn" onClick={markAllAsRead}>
-                <Check size={14} /> Mark all read
-              </button>
-            )}
+            <div style={{ display: 'flex', gap: '0.4rem' }}>
+              {unreadCount > 0 && (
+                <button className="mark-all-btn" onClick={markAllAsRead} title="Mark all as read">
+                  <Check size={13} /> Read all
+                </button>
+              )}
+              {notifications.length > 0 && (
+                <button
+                  className="mark-all-btn"
+                  onClick={clearNotifications}
+                  style={{ color: '#DC2626' }}
+                  title="Clear all notifications"
+                >
+                  <Trash2 size={13} /> Clear
+                </button>
+              )}
+            </div>
           </div>
 
           <div className="dropdown-body">
@@ -58,6 +70,7 @@ export default function NotificationBell() {
                   key={n._id}
                   className={`notification-item ${!n.read ? 'unread' : ''}`}
                   onClick={() => markAsRead(n._id)}
+                  style={{ position: 'relative' }}
                 >
                   <div className="item-header">
                     <span className={`urgency-pill ${n.urgency ? n.urgency.toLowerCase() : 'urgent'}`}>
@@ -68,6 +81,27 @@ export default function NotificationBell() {
                     </span>
                   </div>
                   <p className="item-message">{n.message}</p>
+
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      deleteNotification(n._id);
+                    }}
+                    style={{
+                      position: 'absolute',
+                      right: '10px',
+                      bottom: '8px',
+                      background: 'none',
+                      border: 'none',
+                      color: 'var(--text-muted)',
+                      cursor: 'pointer',
+                      padding: '2px'
+                    }}
+                    title="Delete notification"
+                  >
+                    <X size={14} />
+                  </button>
                 </div>
               ))
             )}

@@ -47,6 +47,17 @@ export const api = {
       body: JSON.stringify(requestData)
     }),
 
+  updateRequest: (id, requestData) =>
+    request(`/requests/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(requestData)
+    }),
+
+  deleteRequest: (id) =>
+    request(`/requests/${id}`, {
+      method: 'DELETE'
+    }),
+
   // Member C: Browse Donors (with filter params)
   getDonors: (bloodType = 'All', district = 'All') => {
     const params = new URLSearchParams();
@@ -56,8 +67,30 @@ export const api = {
     return request(`/donors${queryString}`);
   },
 
+  updateDonor: (id, donorData) =>
+    request(`/donors/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(donorData)
+    }),
+
+  deleteDonor: (id) =>
+    request(`/donors/${id}`, {
+      method: 'DELETE'
+    }),
+
   // Member D: Active Requests
-  getActiveRequests: () => request('/requests')
+  getActiveRequests: () => request('/requests'),
+
+  // Notifications Edit & Delete
+  deleteNotification: (id) =>
+    request(`/notifications/${id}`, {
+      method: 'DELETE'
+    }),
+
+  clearNotifications: () =>
+    request('/notifications', {
+      method: 'DELETE'
+    })
 };
 
 export const SRI_LANKAN_DISTRICTS = [

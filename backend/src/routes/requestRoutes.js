@@ -3,7 +3,9 @@ const router = express.Router();
 const {
   createRequest,
   getRequests,
-  updateRequestStatus
+  updateRequestStatus,
+  updateRequest,
+  deleteRequest
 } = require('../controllers/requestController');
 const { protect } = require('../middleware/authMiddleware');
 
@@ -20,6 +22,8 @@ router.route('/')
   .post(optionalAuth, createRequest);
 
 router.route('/:id')
-  .patch(optionalAuth, updateRequestStatus);
+  .put(optionalAuth, updateRequest)
+  .patch(optionalAuth, updateRequestStatus)
+  .delete(optionalAuth, deleteRequest);
 
 module.exports = router;

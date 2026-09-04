@@ -129,20 +129,25 @@ const getRequests = async (req, res) => {
   }
 };
 
-// @desc    Update request status (fulfilled/expired)
-// @route   PATCH /api/requests/:id
+// @desc    Full update of a blood request (Edit fields)
+// @route   PUT /api/requests/:id
 // @access  Public / Protected
-const updateRequestStatus = async (req, res) => {
+const updateRequest = async (req, res) => {
   try {
     const { id } = req.params;
-    const { status } = req.body;
-
-    if (!['open', 'fulfilled', 'expired'].includes(status)) {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid status value. Must be open, fulfilled, or expired.'
-      });
-    }
+    const {
+      patientHospital,
+      patientName,
+      hospital,
+      bloodType,
+      bloodGroupNeeded,
+      unitsNeeded,
+      urgency,
+      district,
+      city,
+      status,
+      expiresAt
+    } = req.body;
 
     const request = await Request.findById(id);
     if (!request) {
@@ -152,19 +157,66 @@ const updateRequestStatus = async (req, res) => {
       });
     }
 
-    request.status = status;
+    const bType = bloodType || bloodGroupNeeded || request.bloodType;
+    const locDistrict = district || city || request.district;
+    const hosp = patientHospital || hospital || request.hospital;
+
+    request.patientHospital = hosp;
+    request.patientName = patientName || request.patientName;
+    request.hospital = hosp;
+    request.bloodType = bType;
+    request.bloodGroupNeeded = bType;
+    request.unitsNeeded = unitsNeeded !== undefined ? unitsNeeded : request.unitsNeeded;
+    request.urgency = urgency || request.urgency;
+    request.district = locDistrict;
+    request.city = locDistrict;
+    if (status) request.status = status;
+    if (expiresAt !== undefined) request.expiresAt = expiresAt;
+
     await request.save();
 
     res.status(200).json({
       success: true,
-      message: `Request status updated to ${status}`,
+      message: 'Blood request updated successfully',
       data: request
     });
   } catch (error) {
-    console.error('Update Request Status Error:', error);
+    console.error('Update Request Error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error updating request status',
+      message: 'Server error updating blood request',
+      error: error.message
+    });
+  }
+};
+
+// @desc    Delete a blood request
+// @route   DELETE /api/requests/:id
+// @access  Public / Protected
+const deleteRequest = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const request = await Request.findById(id);
+    if (!request) {
+      return res.status(404).json({
+        success: false,
+        message: 'Request not found'
+      });
+    }
+
+    await Request.findByIdAndDelete(id);
+
+    res.status(200).json({
+      success: true,
+      message: 'Blood request deleted successfully',
+      id
+    });
+  } catch (error) {
+    console.error('Delete Request Error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error deleting blood request',
       error: error.message
     });
   }
@@ -173,5 +225,7 @@ const updateRequestStatus = async (req, res) => {
 module.exports = {
   createRequest,
   getRequests,
-  updateRequestStatus
+  updateRequestStatus,
+  updateRequest,
+  deleteRequest
 };

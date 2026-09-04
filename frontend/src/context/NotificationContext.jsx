@@ -91,6 +91,29 @@ export const NotificationProvider = ({ children }) => {
     }
   };
 
+  const deleteNotification = async (id) => {
+    try {
+      await authFetch(`/notifications/${id}`, { method: 'DELETE' });
+      const target = notifications.find((n) => n._id === id);
+      setNotifications((prev) => prev.filter((n) => n._id !== id));
+      if (target && !target.read) {
+        setUnreadCount((prev) => Math.max(0, prev - 1));
+      }
+    } catch (error) {
+      console.error('Failed to delete notification:', error.message);
+    }
+  };
+
+  const clearNotifications = async () => {
+    try {
+      await authFetch('/notifications', { method: 'DELETE' });
+      setNotifications([]);
+      setUnreadCount(0);
+    } catch (error) {
+      console.error('Failed to clear notifications:', error.message);
+    }
+  };
+
   return (
     <NotificationContext.Provider
       value={{
@@ -101,6 +124,8 @@ export const NotificationProvider = ({ children }) => {
         fetchNotifications,
         markAsRead,
         markAllAsRead,
+        deleteNotification,
+        clearNotifications,
         closeToast: () => setToastAlert(null)
       }}
     >
