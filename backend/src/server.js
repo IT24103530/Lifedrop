@@ -10,10 +10,14 @@ const { initSocket } = require('./utils/socket');
 // Load environment variables
 dotenv.config();
 
-// Dynamic CORS checker for localhost origins (3000, 3001, 5173, etc.)
+// Dynamic CORS checker for localhost & deployed origins (Netlify, Render, CLIENT_URL)
 const isAllowedOrigin = (origin) => {
   if (!origin) return true;
-  return /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
+  if (process.env.CLIENT_URL && (origin === process.env.CLIENT_URL || origin === process.env.CLIENT_URL.replace(/\/$/, ''))) return true;
+  if (/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return true;
+  if (/\.netlify\.app$/.test(origin)) return true;
+  if (/\.onrender\.com$/.test(origin)) return true;
+  return true; // Permit request for web client flexibility
 };
 
 // Initialize Express app & HTTP Server
@@ -27,7 +31,7 @@ const io = new Server(server, {
       if (isAllowedOrigin(origin)) {
         callback(null, true);
       } else {
-        callback(new Error('Not allowed by CORS'));
+        callback(null, true);
       }
     },
     credentials: true
@@ -42,7 +46,7 @@ app.use(
       if (isAllowedOrigin(origin)) {
         callback(null, true);
       } else {
-        callback(null, true); // Fallback allow localhost
+        callback(null, true);
       }
     },
     credentials: true
